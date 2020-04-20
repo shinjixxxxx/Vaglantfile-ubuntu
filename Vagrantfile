@@ -71,8 +71,39 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
 config.vm.provision "shell", inline: <<-SHELL
   apt-get update
+  
   apt-get install -y apache2
   apt-get install -y php
   apt-get install -y emacs
+
+  ############
+  # docker
+  ############
+
+  # SET UP THE REPOSITORY
+  # 1
+  apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+
+  # 2
+  # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg > /tmp/___ubuntu_shinji_docker_pkg
+  apt-key -y add /tmp/___ubuntu_shinji_docker_pkg
+
+  # 3
+  add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+  # INSTALL DOCKER ENGINE
+  apt-get update -y
+  apt-get install -y docker-ce docker-ce-cli containerd.io
+
+
 SHELL
 end
