@@ -1,6 +1,6 @@
 # Node開発環境用Vagrantfile
 
-## Motivation
+## モチベーション
 webpackなどを使ったタスクランナー環境をvagrant上に短時間で簡単に構築できるように作りました。
 ## 概要
 vagrant 環境を利用してnodeのタスクランナーを使った開発を行うための
