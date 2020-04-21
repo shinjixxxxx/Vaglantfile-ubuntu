@@ -35,6 +35,7 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
+
   config.vm.network "private_network", ip: "192.168.33.10"
 
   # Create a public network, which generally matched to bridged network.
@@ -77,7 +78,16 @@ Vagrant.configure("2") do |config|
 config.vm.provision "shell", inline: <<-SHELL
   # 参考:
   # https://qastack.jp/server/500764/dpkg-reconfigure-unable-to-re-open-stdin-no-file-or-directory
+  # https://docs.openstack.org/liberty/ja/install-guide-ubuntu/debconf/debconf-concepts.html
+  # 設定のインストラクションを非対話モードに設定
+
   export DEBIAN_FRONTEND=noninteractive
+
+  ###################
+  # apt-get update
+  # apache2 php emacs 
+  # インストール
+  ###################
 
   apt-get update
   
@@ -85,9 +95,11 @@ config.vm.provision "shell", inline: <<-SHELL
   apt-get install -y php
   apt-get install -y emacs
 
-  ############
+  ###################
   # docker
-  ############
+  ###################
+  # Install Docker Engine on Ubuntu
+  # https://docs.docker.com/engine/install/ubuntu/
 
   # SET UP THE REPOSITORY
   # 1
@@ -121,9 +133,11 @@ config.vm.provision "shell", inline: <<-SHELL
   echo 'sudo docker rm -f samba ; sudo docker run -it --name samba -p 139:139 -p 445:445 -v /dockerd:/dockerd -d dperson/samba -s "dockerd;/dockerd;yes;no"' > /dockerd/docker_samba.sh
   chmod +x /dockerd/docker_samba.sh
   
+  ###################
+  # apache2設定
+  ###################
+  
   echo '\nListen 8080\n' >> /etc/apache2/ports.conf
-
-
   echo  '<VirtualHost *:8080>\n\
         ServerAdmin webmaster@localhost\n\
         DocumentRoot /dockerd\n\
