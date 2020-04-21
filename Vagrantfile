@@ -134,6 +134,15 @@ config.vm.provision "shell", inline: <<-SHELL
   chmod +x /dockerd/docker_samba.sh
   
   ###################
+  # docker samba 起動設定
+  ###################
+
+  echo '#!/bin/sh -e\n' > /etc/rc.local
+  echo 'sudo /dockerd/docker_samba.sh\n' >> /etc/rc.local
+  chmod +x /etc/rc.local
+  /etc/rc.local
+
+  ###################
   # apache2設定
   ###################
   
