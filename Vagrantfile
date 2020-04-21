@@ -66,10 +66,19 @@ Vagrant.configure("2") do |config|
   # View the documentation for the provider you are using for more
   # information on available options.
 
+
+  #########################################################
+  # プロビジョニング
+  #########################################################
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
+
 config.vm.provision "shell", inline: <<-SHELL
+  # 参考:
+  # https://qastack.jp/server/500764/dpkg-reconfigure-unable-to-re-open-stdin-no-file-or-directory
+  export DEBIAN_FRONTEND=noninteractive
+
   apt-get update
   
   apt-get install -y apache2
@@ -90,11 +99,16 @@ config.vm.provision "shell", inline: <<-SHELL
     software-properties-common
 
   # 2
+  ### 
+  # 参考:
+  # https://qiita.com/jacob_327/items/e99ca1cf8167d4c1486d
+  export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
+
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg > /tmp/___ubuntu_shinji_docker_pkg
   apt-key add /tmp/___ubuntu_shinji_docker_pkg
 
   # 3
-  add-apt-repository \
+  add-apt-repository  -y \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
