@@ -90,9 +90,8 @@ config.vm.provision "shell", inline: <<-SHELL
     software-properties-common
 
   # 2
-  # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg > /tmp/___ubuntu_shinji_docker_pkg
-  apt-key -y add /tmp/___ubuntu_shinji_docker_pkg
+  apt-key add /tmp/___ubuntu_shinji_docker_pkg
 
   # 3
   add-apt-repository \
@@ -104,6 +103,27 @@ config.vm.provision "shell", inline: <<-SHELL
   apt-get update -y
   apt-get install -y docker-ce docker-ce-cli containerd.io
 
+  mkdir /dockerd
+  echo 'sudo docker rm -f samba \; sudo docker run -it --name samba -p 139:139 -p 445:445 -v /dockerd:/dockerd -d dperson/samba -s "dockerd;/dockerd;yes;no"' > /dockerd/docker_samba.sh
+  chmod +x /dockerd/docker_samba.sh
+  
+  echo '\nListen 8080\n' >> /etc/apache2/ports.conf
+
+
+  echo  '<VirtualHost *:8080>\
+        ServerAdmin webmaster@localhost\
+        DocumentRoot /dockerd\
+        ErrorLog ${APACHE_LOG_DIR}/error.log\
+        CustomLog ${APACHE_LOG_DIR}/access.log combined\
+        <Directory /dockerd/>\
+          Options Indexes FollowSymLinks\
+          AllowOverride None\
+          Require all granted\
+      	</Directory>\
+  </VirtualHost>\
+  ' > /etc/apache2/sites-available/001-docker.conf
+
+  ln -s /etc/apache2/sites-available/001-docker.conf /etc/apache2/sites-enabled/001-docker.conf
 
 SHELL
 end
