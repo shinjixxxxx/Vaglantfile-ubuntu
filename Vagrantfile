@@ -130,6 +130,7 @@ config.vm.provision "shell", inline: <<-SHELL
   apt-get install -y docker-ce docker-ce-cli containerd.io
 
   mkdir /dockerd
+  chmod 777 /dockerd
   echo 'sudo docker rm -f samba ; sudo docker run -it --name samba -p 139:139 -p 445:445 -v /dockerd:/dockerd -d dperson/samba -s "dockerd;/dockerd;yes;no"' > /dockerd/docker_samba.sh
   chmod +x /dockerd/docker_samba.sh
   
