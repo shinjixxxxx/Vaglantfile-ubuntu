@@ -155,5 +155,18 @@ config.vm.provision "shell", inline: <<-SHELL
 
   systemctl restart apache2
 
+  ###################
+  # node npm n 設定
+  ###################
+
+  # https://www.trifields.jp/how-to-install-node-js-on-ubuntu1804-3544
+  
+  apt install -y nodejs npm
+  npm install -g -y n
+  n latest
+  apt purge -y nodejs npm
+  apt autoremove -y
+
+
 SHELL
 end
