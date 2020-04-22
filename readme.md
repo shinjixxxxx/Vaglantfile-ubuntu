@@ -2,6 +2,7 @@
 
 ## モチベーション
 webpackなどを使ったタスクランナー環境をvagrant上に短時間で簡単に構築できるように作りました。
+npm install時のファイル名長やシンボリックリンクの問題を避けるためゲストosのファイルシステムを使い、sambaでホストとファイル共有します。
 
 ## 概要
 vagrant 環境を利用してnodeのタスクランナーを使った開発を行うための
@@ -35,7 +36,8 @@ http://192.168.33.10:8080
   vagrant@ubuntu:~$ cd /dockerd
   vagrant@ubuntu:/dockerd$ mkdir pj
   vagrant@ubuntu:/dockerd$ cd pj
-  vagrant@ubuntu:/dockerd/pj$ npm init
+  vagrant@ubuntu:/dockerd/pj$ # npm を使って開発環境を初期化
+  vagrant@ubuntu:/dockerd/pj$ npm init -y
   vagrant@ubuntu:/dockerd/pj$ npm imstall react react-dom
   vagrant@ubuntu:/dockerd/pj$ npm imstall -D webpack webpack-cli babel-loader @babel/core @babel/preset-env @babel/preset-react
   vagrant@ubuntu:/dockerd/pj$ mkdir src
@@ -75,7 +77,7 @@ smb://192.168.33.10
 *※ 一定時間で共有が外れるので接続しなおしてください。*
    
 #### windowsの場合
-ファイルエクスプローラに以下のアドレスを設定して接続。
+エクスプローラのアドレスに以下のアドレスへアクセス。
 ```
 ¥¥192.168.33.10
 ```
