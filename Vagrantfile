@@ -1,3 +1,4 @@
+# coding: utf-8
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -34,8 +35,10 @@ Vagrant.configure("2") do |config|
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
   # config.vm.network "forwarded_port", guest: 8080, host: 8080
 
+  
   # webpack-dev-server のポートをフォワード provate networkと共存可能
-  config.vm.network "forwarded_port", guest: 8082, host: 8082
+#  config.vm.network "forwarded_port", guest: 8082, host: 8082
+
   # 以下のsamba共有はなぜかうまくいかない
   # config.vm.network "forwarded_port", guest: 139, host: 139
   # config.vm.network "forwarded_port", guest: 445, host: 445
@@ -43,8 +46,12 @@ Vagrant.configure("2") do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
 
-  config.vm.network "private_network", ip: "192.168.33.10"
+ #config.vm.network "private_network", ip: "192.168.33.10"
 
+ config.vm.network "public_network", ip: "192.168.1.200"
+
+
+  
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
@@ -151,9 +158,8 @@ config.vm.provision "shell", inline: <<-SHELL
   ###################
   # apache2設定
   ###################
-  
-  echo '\nListen 8080\n' >> /etc/apache2/ports.conf
-  echo  '<VirtualHost *:8080>\n\
+
+  echo  '<VirtualHost *:80>\n\
         ServerAdmin webmaster@localhost\n\
         DocumentRoot /dockerd\n\
         ErrorLog ${APACHE_LOG_DIR}/error.log\n\
@@ -167,6 +173,11 @@ config.vm.provision "shell", inline: <<-SHELL
   ' > /etc/apache2/sites-available/001-docker.conf
 
   ln -s /etc/apache2/sites-available/001-docker.conf /etc/apache2/sites-enabled/001-docker.conf
+
+  ### 80を使うのでデフォルトホストは消す
+  rm /etc/apache2/sites-enabled/000-default.conf
+  ###
+
 
   systemctl restart apache2
 
